@@ -1,0 +1,29 @@
+---
+- name: install ntp
+  portage: package=net-misc/ntp
+  tags: packages
+
+- name: copy configuration files
+  template: >
+    src={{ item.name }}.j2
+    dest={{ item.dest }}/{{ item.name }}
+    owner=root group=root mode=0644
+  notify: restart ntp
+  tags: config
+  with_items:
+    - { name: ntp.conf, dest: /etc }
+    - { name: ntpd, dest: /etc/conf.d }
+
+- name: configure dhcpcd to be adding NTP servers to /etc/ntp.conf.dhcp
+  lineinfile: >
+    dest=/etc/dhcpcd.enter-hook
+    regexp='^NTP_CONF='
+    line='NTP_CONF=/etc/ntp.conf.dhcp'
+    create=true
+    owner=root group=root mode=0644
+  notify: restart dhcpcd if running
+  tags: [config, dhcpcd]
+
+- name: enable and start ntpd
+  service: name=ntpd enabled=true state=started
+  tags: services

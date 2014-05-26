@@ -1,0 +1,21 @@
+---
+# Options to pass to the ntpd process.
+ntp_ntpd_opts: '-u ntp:ntp -g'
+
+# List of the servers (domain names or IP addresses) ntpd should sync with.
+ntp_servers:
+  - 0.gentoo.pool.ntp.org
+  - 1.gentoo.pool.ntp.org
+  - 2.gentoo.pool.ntp.org
+  - 3.gentoo.pool.ntp.org
+
+# List of the hosts or networks to allow synchronize their clocks with your
+# server, but ensure they are not allowed to configure the server or used as
+# peers to synchronize against.
+#
+# Example: ['192.168.0.0 255.255.0.0']
+ntp_allow_access_from: []
+
+# Apply default setting; deny other machines from changing the configuration
+# but allow localhost.
+ntp_restrict_defaults: true
